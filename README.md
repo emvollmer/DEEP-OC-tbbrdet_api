@@ -3,7 +3,7 @@
 </div>
 
 # DEEP-OC-tbbrdet_api
-[![Build Status](https://jenkins.indigo-datacloud.eu/buildStatus/icon?job=Pipeline-as-code/DEEP-OC-org/UC-emvollmer-DEEP-OC-tbbrdet_api/master)](https://jenkins.indigo-datacloud.eu/job/Pipeline-as-code/job/DEEP-OC-org/job/UC-emvollmer-DEEP-OC-tbbrdet_api/job/master)
+[![Build Status](https://jenkins.indigo-datacloud.eu/buildStatus/icon?job=Pipeline-as-code/DEEP-OC-org/UC-emvollmer-DEEP-OC-tbbrdet_api/test)](https://jenkins.indigo-datacloud.eu/job/Pipeline-as-code/job/DEEP-OC-org/job/UC-emvollmer-DEEP-OC-tbbrdet_api/job/test)
 
 This is a container that will run the [tbbrdet_api](https://github.com/emvollmer/tbbrdet_api) application leveraging the DEEP as a Service API component ([DEEPaaS API V2](https://github.com/indigo-dc/DEEPaaS)).
 
