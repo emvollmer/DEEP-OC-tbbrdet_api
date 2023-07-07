@@ -1,0 +1,37 @@
+{
+    "title": "tbbrdet_api",
+    "summary": "Deepaas API for TBBRDet Model",
+    "description": [
+        "tbbrdet_api is an application using the DEEPaaS API.\n",
+        "Write additional information for your users (how to predict, how to retrain,",
+        "dataset description, training description, etc)."
+    ],
+    "keywords": [
+        "docker",
+        "api-v2"
+    ],
+    "license": "BSD-3-Clause",
+    "date_creation": "2023-07-07",
+    "sources": {
+		"dockerfile_repo": "https://github.com/emvollmer/DEEP-OC-tbbrdet_api",
+		"docker_registry_repo": "deephdc/uc-emvollmer-deep-oc-tbbrdet_api",
+		"code": "https://github.com/emvollmer/tbbrdet_api"
+	},
+    "continuous_integration": {
+        "build_status_badge": "https://jenkins.indigo-datacloud.eu/buildStatus/icon?job=Pipeline-as-code/DEEP-OC-org/UC-emvollmer-DEEP-OC-tbbrdet_api/master",
+        "build_status_url": "https://jenkins.indigo-datacloud.eu/job/Pipeline-as-code/job/DEEP-OC-org/job/UC-emvollmer-DEEP-OC-tbbrdet_api/job/master"
+    },
+    "tosca": [
+        {
+            "title": "Mesos (CPU)",
+            "url": "https://raw.githubusercontent.com/indigo-dc/tosca-templates/master/deep-oc/deep-oc-marathon-webdav.yml",
+            "inputs": [
+                "rclone_conf",
+                "rclone_url",
+                "rclone_vendor",
+                "rclone_user",
+                "rclone_pass"
+            ]
+        }
+    ]
+}
