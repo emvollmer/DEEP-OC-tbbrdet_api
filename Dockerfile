@@ -10,10 +10,10 @@
 # [!] Note: For the Jenkins CI/CD pipeline, input args are defined inside the
 # Jenkinsfile, not here!
 
-ARG tag=20.04
+ARG tag=base
 
 # Base image, e.g. tensorflow/tensorflow:2.9.1
-FROM ubuntu:${tag}
+FROM deephdc/uc-emvollmer-deep-oc-tbbrdet_api:${tag}
 
 LABEL maintainer='Elena Vollmer'
 LABEL version='0.0.1'
@@ -25,35 +25,6 @@ ARG branch=master
 # Install Ubuntu packages
 # - gcc is needed in Pytorch images because deepaas installation might break otherwise (see docs) (it is already installed in tensorflow images)
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        apt-utils \
-        gnupg \
-        lsb-release \
-        software-properties-common \
-        ca-certificates \
-        gcc \
-        git \
-        curl \
-        nano \
-        wget \
-    && rm -rf /var/lib/apt/lists/*
-
-# install cuda
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin && \
-    mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
-    apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub   && \
-    add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /" && \
-    apt-get update && \
-    apt-get install -y cuda-toolkit-11-6 \
-    libcudnn8=8.4.0.27-1+cuda11.6 && \
-    rm -rf /var/lib/apt/lists/*
-
-# install python 3.6
-RUN add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y python3.6 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1 && \
-    update-alternatives --set python /usr/bin/python3.6 && \
     rm -rf /var/lib/apt/lists/*
 
 # Set LANG environment
@@ -82,16 +53,22 @@ RUN git clone https://github.com/deephdc/deep-start /srv/.deep-start && \
 ENV SHELL /bin/bash
 
 # Install user app
-# [!] deployment and install scripts also install python, cuda, cudadnn etc!
-# [!] Remember: DEEP API V2 only works with python>=3.6
-#RUN curl -o deployment_setup.sh https://raw.githubusercontent.com/emvollmer/tbbrdet_api/master/deployment_setup.sh && \
-#    chmod +x deployment_setup.sh && \
-#    ./deployment_setup.sh
-    
-#RUN cd tbbrdet_api && \
-#    chmod +x install_TBBRDet.sh && \
-#    ./install_TBBRDet.sh && \
-#    cd ..
+# get code repository
+RUN git clone --depth 1 -b $branch --recurse-submodules  https://github.com/emvollmer/tbbrdet_api.git && \
+    cd tbbrdet_api && \
+    git pull --recurse-submodules && \
+    git submodule update --remote --recursive && \
+    # those packages below should be in requirements.txt
+    pip3 install --no-cache-dir \
+        future \
+        tensorboard \
+        mlflow \
+        joblib \
+        tqdm && \
+    pip3 install --no-cache-dir -e ./TBBRDet && \
+    pip3 install --no-cache-dir -e . && \
+    cd ..
+
 
 #RUN mkdir -p /srv/tbbrdet_api/models/XYZ/weights && \
 #    curl -L https://URL_LINK_T_NEXTCLOUD/best.pt \
